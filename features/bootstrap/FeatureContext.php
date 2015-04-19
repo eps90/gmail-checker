@@ -43,7 +43,7 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
      */
     public function afterScenario()
     {
-        $this->getSession()->restart();
+        $this->getSession()->stop();
     }
 
     /**
