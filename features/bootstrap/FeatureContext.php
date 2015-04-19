@@ -24,8 +24,14 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
     public function __construct($username = '', $password = '')
     {
         if (empty($username) || empty($password)) {
-            $this->username = isset($_SERVER['GMAIL_USERNAME']) ? $_SERVER['GMAIL_USERNAME'] : null;
-            $this->password = isset($_SERVER['GMAIL_PASSWD']) ? $_SERVER['GMAIL_PASSWD'] : null;
+            $username = isset($_SERVER['GMAIL_USERNAME']) ? $_SERVER['GMAIL_USERNAME'] : null;
+            $password = isset($_SERVER['GMAIL_PASSWD']) ? $_SERVER['GMAIL_PASSWD'] : null;
+            if (empty($username) || empty($username)) {
+                throw new \Exception(
+                    "You must provide your Google account's username and password\n"
+                    . "Please take a look at README.md file to see how to do this."
+                );
+            }
         } else {
             $this->username = $username;
             $this->password = $password;
