@@ -1,0 +1,14 @@
+default:
+  gherkin:
+    filters:
+        tags: "~@pending"
+  extensions:
+    Behat\MinkExtension:
+      base_url: 'http://gmail.com/'
+      sessions:
+        default:
+          selenium2: ~
+  suites:
+    default:
+      contexts:
+        - Context\FeatureContext
