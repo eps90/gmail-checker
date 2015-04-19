@@ -4,22 +4,53 @@ namespace Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
-use Behat\Gherkin\Node\PyStringNode;
-use Behat\Gherkin\Node\TableNode;
+use Behat\MinkExtension\Context\MinkContext;
 
-/**
- * Defines application features from the specific context.
- */
-class FeatureContext implements Context, SnippetAcceptingContext
+class FeatureContext extends MinkContext implements Context, SnippetAcceptingContext
 {
-    /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
-     */
-    public function __construct()
+    private $elements = [
+        'login form' => 'form#gaia_loginform',
+        'email field' => 'form#gaia_loginform #Email',
+        'password field' => 'form#gaia_loginform #Passwd',
+        'submit button' => 'form#gaia_loginform #signIn'
+    ];
+
+    private $username;
+    private $password;
+
+    public function __construct($username = '', $password = '')
     {
+        if (empty($username) || empty($password)) {
+            $this->username = isset($_SERVER['GMAIL_USERNAME']) ? $_SERVER['GMAIL_USERNAME'] : null;
+            $this->password = isset($_SERVER['GMAIL_PASSWD']) ? $_SERVER['GMAIL_PASSWD'] : null;
+        } else {
+            $this->username = $username;
+            $this->password = $password;
+        }
+    }
+
+    /**
+     * @When /^I should see "([^"]+)" element$/
+     */
+    public function iShouldSeeElement($element)
+    {
+        $this->assertElementOnPage($this->elements[$element]);
+    }
+
+    /**
+     * @When /^I fill in login form with my sign\-up data$/
+     */
+    public function iFillInWithMySignUpData()
+    {
+        $page = $this->getSession()->getPage();
+
+        $emailField = $page->find('css', $this->elements['email field']);
+        $emailField->setValue($this->username);
+
+        $passwordField = $page->find('css', $this->elements['password field']);
+        $passwordField->setValue($this->password);
+
+        $submitButton = $page->find('css', $this->elements['submit button']);
+        $submitButton->click();
     }
 }

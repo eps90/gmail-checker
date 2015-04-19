@@ -8,7 +8,7 @@ Feature: Checking email presence in GMail account
 
   Scenario: Successful login
     Given I am on the homepage
-    When I fill in "login form" with my sign-up data
+    When I fill in login form with my sign-up data
     Then I should be redirected to my email account
 
   Scenario: Email presence
