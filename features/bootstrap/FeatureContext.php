@@ -4,6 +4,7 @@ namespace Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\MinkExtension\Context\MinkContext;
 
 class FeatureContext extends MinkContext implements Context, SnippetAcceptingContext
@@ -52,5 +53,39 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
 
         $submitButton = $page->find('css', $this->elements['submit button']);
         $submitButton->click();
+    }
+
+    /**
+     * @Then /^I should be redirected to my email account$/
+     */
+    public function iShouldBeRedirectedToMyEmailAccount()
+    {
+        $this->waitFor(
+            function(FeatureContext $context) {
+                $page = $context->getSession()->getPage();
+                $navigationElement = $page->find('css', '[role="navigation"]');
+
+                return $navigationElement !== null;
+            }
+        );
+    }
+
+    /**
+     * Execute $callable as long as it returns false
+     *
+     * @param callable $callable
+     * @return bool
+     */
+    private function waitFor($callable)
+    {
+        while (true) {
+            if ($callable($this)) {
+                return true;
+            }
+
+            sleep(1);
+        }
+
+        return false;
     }
 }
