@@ -20,7 +20,7 @@ where *X.YY.Z* is your selenium version.
 ## Running the tests
 To be able to log in, you must provide your Google account details. You can do this in two ways:
 
-* Provide **username** and **password** in behat config:
+* Provide **username** and **password** in behat config and running Behat by `bin/behat`
 
 ```yaml
 # behat.yml.dist
@@ -41,3 +41,8 @@ GMAIL_USERNAME="john.smith" GMAIL_PASSWD=qwe123 bin/behat
 
 ## Limitations
 These tests doesn't support accounts with two-step authentication. 
+
+## What should be done to improve the project?
+* Add support for multiple email providers (Windows Live, etc). 
+* Ask automatically for Google account's data during `composer install`
+* Separate steps implementation by creating PageObjects
