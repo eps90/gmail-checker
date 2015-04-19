@@ -4,6 +4,7 @@ namespace Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\SnippetAcceptingContext;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\MinkExtension\Context\MinkContext;
 
@@ -13,7 +14,8 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         'login form' => 'form#gaia_loginform',
         'email field' => 'form#gaia_loginform #Email',
         'password field' => 'form#gaia_loginform #Passwd',
-        'submit button' => 'form#gaia_loginform #signIn'
+        'submit button' => 'form#gaia_loginform #signIn',
+        'email' => '[role="main"] [role="link"]'
     ];
 
     private $username;
@@ -28,6 +30,14 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
             $this->username = $username;
             $this->password = $password;
         }
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function afterScenario()
+    {
+        $this->getSession()->restart();
     }
 
     /**
@@ -87,5 +97,27 @@ class FeatureContext extends MinkContext implements Context, SnippetAcceptingCon
         }
 
         return false;
+    }
+
+    /**
+     * @When /^I successfully log in into my Google account$/
+     */
+    public function iSuccessfullyLogInIntoMyGoogleAccount()
+    {
+        $this->iAmOnHomepage();
+        $this->iFillInWithMySignUpData();
+        $this->iShouldBeRedirectedToMyEmailAccount();
+    }
+
+    /**
+     * @Then /^I should see mails$/
+     */
+    public function iShouldSeeMails()
+    {
+        $page = $this->getSession()->getPage();
+        $emailElement = $page->find('css', $this->elements['email']);
+        if ($emailElement == null) {
+            throw new \Exception("No email found");
+        }
     }
 }
