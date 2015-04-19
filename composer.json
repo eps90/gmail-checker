@@ -14,5 +14,10 @@
     ],
     "config": {
         "bin-dir": "./bin"
+    },
+    "autoload": {
+        "psr-4": {
+            "Context\\": "features/bootstrap"
+        }
     }
 }
